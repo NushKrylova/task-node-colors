@@ -1,9 +1,13 @@
 export enum Colors {
   green = "green",
   blue = "blue",
-  red = "red"
+  red = "red",
+  white = "white",
+  black = "black",
 }
 
 export type ColorData = {
-  name: string, HEX: string, RGB: { R: number, G: number, B: number }
-}
+  name: string;
+  HEX: string;
+  RGB: { R: number; G: number; B: number };
+};

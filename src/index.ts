@@ -32,5 +32,5 @@ main();
 
 /*
 To run application:
-ts-node src/index.ts "green" "blue" "red"
+ts-node src/index.ts "white" "bla-bla" "blue" "red"
 */
