@@ -1,45 +1,36 @@
 import { ColorData, Colors } from "./types";
+const { getColor } = require("./apiMock");
 
-import { getColor } from './apiMock';
+function getColorsData(...args: Colors[]) {
+  const colors: Promise<ColorData | undefined>[] = [];
 
-import { Green, Blue, Red } from './classes';
+  args.forEach((arg) => {
+    const colorData = (getColor(arg) as Promise<ColorData>)
+      .then((data) => data)
+      .catch((error) => {
+        console.log(`${error} ${arg}`);
+        return undefined;
+      });
+    colors.push(colorData);
+  });
 
-async function getColors(green: string, blue: string, red: string, order: string[], callback: (colors: Promise<ColorData>[]) => void) {
-	const colors: Promise<ColorData>[] = [];
-	if (green === 'true') {
-		const greenDetails = new Green();
-		colors[order.indexOf(greenDetails.name)] = getColor(greenDetails.name) as Promise<ColorData>;
-	}
-	if (blue === 'true') {
-		const blueDetails = new Blue()
-		colors[order.indexOf(blueDetails.name)] = getColor(blueDetails.name) as Promise<ColorData>;
-	}
-	if (red === 'true') {
-		const redDetails = new Red();
-		colors[order.indexOf(redDetails.name)] = getColor(redDetails.name) as Promise<ColorData>;
-	}
-	callback(colors);
-	return colors;
+  return Promise.all(colors);
 }
 
-function colors() {
-	console.log("DEBUG: ", process.argv)
-	let green = process.argv[2];;
-	let blue = process.argv[3]
-	let red = process.argv[4];
-	const colorOrder = process.argv[5]
-	getColors(green, blue, red, JSON.parse(colorOrder), async function (colors) {
-		const colorsResults = await Promise.all(colors)
-		// console.log(colors)
-		var hexColors: Array<string | undefined> = []
-		colorsResults.forEach(color => color ? hexColors.push(color.HEX) : null)
-		console.log(hexColors);
-	});
+async function main() {
+  const argInputs = process.argv.slice(2);
+  const colorsResults = await getColorsData(...(argInputs as Colors[]));
+
+  const hexColors = colorsResults.map((color: ColorData | undefined) =>
+    color ? color.HEX : undefined
+  );
+
+  console.log(hexColors);
 }
 
-colors()
+main();
 
 /*
 To run application:
-ts-node src/index.ts true false true '["green","blue", "red"]'
+ts-node src/index.ts "green" "blue" "red"
 */

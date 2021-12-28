@@ -1,5 +1,3 @@
-import { Blue, Green, Red } from "./classes";
-
 export enum Colors {
   green = "green",
   blue = "blue",
