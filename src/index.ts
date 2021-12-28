@@ -17,20 +17,39 @@ function getColorsData(...args: Colors[]) {
   return Promise.all(colors);
 }
 
-async function main() {
-  const argInputs = process.argv.slice(2);
-  const colorsResults = await getColorsData(...(argInputs as Colors[]));
-
-  const hexColors = colorsResults.map((color: ColorData | undefined) =>
+function getColorsHex(colorsData: Array<ColorData | undefined>) {
+  return colorsData.map((color: ColorData | undefined) =>
     color ? color.HEX : undefined
   );
+}
 
-  console.log(hexColors);
+function getColorsRGB(colorsData: Array<ColorData | undefined>) {
+  return colorsData.map((color: ColorData | undefined) =>
+    color ? color.RGB : undefined
+  );
+}
+
+async function main() {
+  const argColors = process.argv[2];
+  const argColorFormat = process.argv[3];
+  const argColorList = argColors.split(" ");
+
+  const colorsResults = await getColorsData(...(argColorList as Colors[]));
+
+  if (argColorFormat === "--rgb") {
+    console.log(getColorsRGB(colorsResults));
+  } else if (argColorFormat === "--hex") {
+    console.log(getColorsHex(colorsResults));
+  } else {
+    console.log(
+      "Error: Invalid color format, expected values are '--rgb' or '--hex'"
+    );
+  }
 }
 
 main();
 
 /*
 To run application:
-ts-node src/index.ts "white" "bla-bla" "blue" "red"
+ts-node src/index.ts "white bla-bla blue red" "--rgb"
 */
