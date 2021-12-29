@@ -8,7 +8,7 @@
       "runtimeExecutable": "node",
       "runtimeArgs": ["--nolazy", "-r", "ts-node/register/transpile-only"],
 
-      "args": ["src/index.ts", "green", " g", "blue"],
+      "args": ["src/index.ts", "white bla-bla blue red", "--rgb", "--sync"],
 
       "cwd": "${workspaceRoot}",
       "internalConsoleOptions": "openOnSessionStart",

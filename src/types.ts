@@ -9,5 +9,11 @@ export enum Colors {
 export type ColorData = {
   name: string;
   HEX: string;
-  RGB: { R: number; G: number; B: number };
+  RGB: ColorRGB;
+};
+
+export type ColorRGB = {
+  R: number;
+  G: number;
+  B: number;
 };
