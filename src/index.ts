@@ -2,9 +2,7 @@ import { ColorData, ColorRGB, Colors } from "./types";
 const { getColor } = require("./apiMock");
 
 async function getColorsDataSync(
-  callback: (
-    colorsData: Array<ColorData | undefined>
-  ) => Array<string | ColorRGB | undefined>,
+  callback: (colorsData: Array<ColorData | undefined>) => Array<string | ColorRGB | undefined>,
   sync: boolean,
   ...args: Colors[]
 ) {
@@ -37,20 +35,12 @@ async function getColorsDataSync(
   }
 }
 
-function getColorsHex(
-  colorsData: Array<ColorData | undefined>
-): Array<string | undefined> {
-  return colorsData.map((color: ColorData | undefined) =>
-    color ? color.HEX : undefined
-  );
+function getColorsHex(colorsData: Array<ColorData | undefined>): Array<string | undefined> {
+  return colorsData.map((color: ColorData | undefined) => (color ? color.HEX : undefined));
 }
 
-function getColorsRGB(
-  colorsData: Array<ColorData | undefined>
-): Array<ColorRGB | undefined> {
-  return colorsData.map((color: ColorData | undefined) =>
-    color ? color.RGB : undefined
-  );
+function getColorsRGB(colorsData: Array<ColorData | undefined>): Array<ColorRGB | undefined> {
+  return colorsData.map((color: ColorData | undefined) => (color ? color.RGB : undefined));
 }
 
 async function main() {
@@ -59,9 +49,7 @@ async function main() {
   const argSync = process.argv[4];
   const argColorList = argColors.split(" ");
 
-  let callback: (
-    colorsData: Array<ColorData | undefined>
-  ) => Array<string | ColorRGB | undefined>;
+  let callback: (colorsData: Array<ColorData | undefined>) => Array<string | ColorRGB | undefined>;
 
   if (argColorFormat === "--rgb") {
     callback = getColorsRGB;
