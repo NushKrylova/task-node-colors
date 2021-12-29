@@ -1,37 +1,47 @@
-import { ColorData, ColorRGB, Colors } from "./types";
+import { ColorData, ColorRGB, Color } from "./types";
 const { getColor } = require("./apiMock");
 
-async function getColorsDataSync(
+async function getColorData(color: Color): Promise<ColorData | undefined> {
+  let colorData: ColorData | undefined;
+
+  try {
+    colorData = await (getColor(color) as Promise<ColorData>);
+  } catch (error) {
+    console.log(`${error} ${color}`);
+    colorData = undefined;
+  }
+  return colorData;
+}
+
+async function getColorsData(...args: Color[]): Promise<Array<ColorData | undefined>> {
+  const colorsPromise: Promise<ColorData | undefined>[] = [];
+
+  for (const arg of args) {
+    const colorData = (getColor(arg) as Promise<ColorData>)
+      .then((data) => data)
+      .catch((error) => {
+        console.log(`${error} ${arg}`);
+        return undefined;
+      });
+    colorsPromise.push(colorData);
+  }
+
+  return Promise.all(colorsPromise);
+}
+
+async function printColorsData(
   callback: (colorsData: Array<ColorData | undefined>) => Array<string | ColorRGB | undefined>,
   sync: boolean,
-  ...args: Colors[]
-) {
+  ...args: Color[]
+): Promise<void> {
   if (sync) {
     for (const arg of args) {
-      try {
-        const color = await (getColor(arg) as Promise<ColorData>);
-        console.log(callback([color]));
-      } catch (error) {
-        console.log(`${error} ${arg}`);
-        const color = undefined;
-        console.log(callback([color]));
-      }
+      let colorData = await getColorData(arg);
+      console.log(callback([colorData]));
     }
   } else {
-    const colorsPromise: Promise<ColorData | undefined>[] = [];
-
-    args.forEach((arg) => {
-      const colorData = (getColor(arg) as Promise<ColorData>)
-        .then((data) => data)
-        .catch((error) => {
-          console.log(`${error} ${arg}`);
-          return undefined;
-        });
-      colorsPromise.push(colorData);
-    });
-
-    const colors = await Promise.all(colorsPromise);
-    console.log(callback(colors));
+    let colorsData = await getColorsData(...args);
+    console.log(callback(colorsData));
   }
 }
 
@@ -59,7 +69,7 @@ async function main() {
 
   let sync: boolean = argSync === "--sync" ? true : false;
 
-  await getColorsDataSync(callback, sync, ...(argColorList as Colors[]));
+  await printColorsData(callback, sync, ...(argColorList as Color[]));
 }
 
 main();
