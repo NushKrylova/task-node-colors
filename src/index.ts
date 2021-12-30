@@ -44,7 +44,7 @@ async function printColorsDataBatch(colorNames: Color[], formatColorData: Format
 }
 
 async function main() {
-  const colorNames = process.argv[2].split(" ") as Color[];
+  const colorNames = process.argv[2].split("=")[1].split(",") as Color[];
   const isRgb = process.argv[3] === "--rgb";
   const isSync = process.argv[4] === "--sync";
 
@@ -58,8 +58,3 @@ async function main() {
 }
 
 main();
-
-/*
-To run application:
-ts-node src/index.ts "white bla-bla blue red" --rgb --sync
-*/
