@@ -17,3 +17,5 @@ export type ColorRGB = {
   G: number;
   B: number;
 };
+
+export type FormatColorDataFn = (colorsData: Array<ColorData | undefined>) => string;
